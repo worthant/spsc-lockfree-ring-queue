@@ -1,5 +1,10 @@
 # SPSC Ring Queue
 
+[![tests](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tests.yml)
+[![TSan](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tsan.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tsan.yml)
+[![ASan+UBSan](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/asan-ubsan.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/asan-ubsan.yml)
+![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
+
 Lock-free **single-producer / single-consumer** циклическая очередь на C++17.  
 Статическое хранилище, без примитивов синхронизации, ручное управление временем
 жизни объектов.
@@ -25,16 +30,38 @@ ctest --test-dir build --output-on-failure
 
 ---
 
-TSan
+## Проверка под санитайзерами
 
-Move the grard below stage 6 (or just `-DRING_RUN_ALL_TESTS=ON`). Then run it
-under ThreadSanitizer — this is the real proof:
+Корректность синхронизации проверяется не на словах, а прогоном под
+**ThreadSanitizer**. TSan отслеживает happens-before по модели памяти C++ -
+через сами атомарные операции, не через железо, => поэтому пропущенный
+`acquire`/`release` он засечёт как гонку даже на сильно-упорядоченном x86. То
+есть x86-раннер в CI полноценно валидирует синхронизацию, релевантную и для
+слабых моделей памяти (ARM).
+
+Конкурентный стресс-тест спрятан за опцией `RING_RUN_ALL_TESTS` (по умолчанию
+выключена, чтобы обычный `ctest` оставался быстрым). Под TSan её включаем:
 
 ```bash
-cmake -S . -B build-tsan -DRING_RUN_ALL_TESTS=ON -DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"
-cmake --build build-tsan --target ring_queue_tests
-./build-tsan/ring_queue_tests "[stage_6]"
+cmake -S . -B build-tsan \
+  -DRING_RUN_ALL_TESTS=ON \
+  -DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"
+cmake --build build-tsan --target ring_queue_tests -j
+./build-tsan/ring_queue_tests             # вся сюита под TSan
+./build-tsan/ring_queue_tests "[stage_6]" # или только конкурентный стейдж
 ```
+
+ASan + UBSan (память, утечки, UB) — тем же приёмом:
+
+```bash
+cmake -S . -B build-asan \
+  -DRING_RUN_ALL_TESTS=ON \
+  -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -g -O1"
+cmake --build build-asan --target ring_queue_tests -j
+./build-asan/ring_queue_tests
+```
+
+---
 
 ## Разбор ТЗ => мои инженерные решения
 
