@@ -1,0 +1,5 @@
+### ignore build files & dirs
+main
+build
+build-tsan
+build-asan
