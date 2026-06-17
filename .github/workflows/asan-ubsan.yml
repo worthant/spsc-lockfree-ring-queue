@@ -1,0 +1,37 @@
+name: ASan+UBSan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: asan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  address-undefined:
+    name: AddressSanitizer + UBSan
+    runs-on: ubuntu-latest
+    env:
+      ASAN_OPTIONS: halt_on_error=1:detect_leaks=1:abort_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Relax ASLR for sanitizers
+        run: sudo sysctl -w vm.mmap_rnd_bits=28
+
+      - name: Configure (ASan+UBSan)
+        run: >
+          cmake -S . -B build-asan -DRING_RUN_ALL_TESTS=ON
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined
+          -fno-sanitize-recover=all -fno-omit-frame-pointer -g -O1"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Build (ASan+UBSan)
+        run: cmake --build build-asan --target ring_queue_tests -j
+
+      - name: Run full suite under ASan+UBSan
+        run: ./build-asan/ring_queue_tests

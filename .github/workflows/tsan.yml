@@ -1,0 +1,37 @@
+name: TSan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: tsan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  thread-sanitizer:
+    name: ThreadSanitizer
+    runs-on: ubuntu-latest
+    env:
+      TSAN_OPTIONS: halt_on_error=1
+    steps:
+      - uses: actions/checkout@v4
+
+      # Ubuntu 24.04 раннеры идут с ядром, у которого высокая энтропия ASLR —
+      # это ломает раскладку shadow-памяти санитайзеров. Возвращаем обратно.
+      - name: Relax ASLR for sanitizers
+        run: sudo sysctl -w vm.mmap_rnd_bits=28
+
+      - name: Configure (TSan)
+        run: >
+          cmake -S . -B build-tsan -DRING_RUN_ALL_TESTS=ON
+          -DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+
+      - name: Build (TSan)
+        run: cmake --build build-tsan --target ring_queue_tests -j
+
+      - name: Run full suite under TSan
+        run: ./build-tsan/ring_queue_tests
