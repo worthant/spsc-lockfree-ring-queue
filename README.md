@@ -19,9 +19,6 @@
   <a aria-label="CMake" href="https://cmake.org/">
     <img alt="" src="https://img.shields.io/badge/CMake-%E2%89%A5_3.16-064F8C?style=for-the-badge&labelColor=000000&logo=cmake&logoColor=white">
   </a>
-  <a aria-label="Catch2 v3" href="https://github.com/catchorg/Catch2">
-    <img alt="" src="https://img.shields.io/badge/Catch2-v3-22D3EE?style=for-the-badge&labelColor=000000&logoColor=white">
-  </a>
 </p>
 
 Lock-free **single-producer / single-consumer** циклическая очередь на C++17.
