@@ -1,0 +1,15 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+NamespaceIndentation: All
+AccessModifierOffset: -4
+PointerAlignment: Left
+ReferenceAlignment: Left
+AlwaysBreakTemplateDeclarations: Yes
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
