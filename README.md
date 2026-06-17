@@ -1,11 +1,30 @@
-# SPSC Ring Queue
+<p align="center">
+  <img width="500" alt="ring_buffer" src="https://github.com/user-attachments/assets/e545476a-b374-4cc8-aea6-36a2880f354d" />
+  <h1 align="center">SPSC Ring Queue</h1>
+</p>
 
-[![tests](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tests.yml)
-[![TSan](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tsan.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/tsan.yml)
-[![ASan+UBSan](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/asan-ubsan.yml/badge.svg)](https://github.com/OWNER/spsc-lockfree-ring-queue/actions/workflows/asan-ubsan.yml)
-![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
+<p align="center">
+  <a aria-label="tests workflow" href="https://github.com/worthant/spsc-lockfree-ring-queue/actions/workflows/tests.yml">
+    <img alt="" src="https://img.shields.io/github/actions/workflow/status/worthant/spsc-lockfree-ring-queue/tests.yml?branch=main&style=for-the-badge&label=tests&labelColor=000000&logo=githubactions&logoColor=white">
+  </a>
+  <a aria-label="ThreadSanitizer workflow" href="https://github.com/worthant/spsc-lockfree-ring-queue/actions/workflows/tsan.yml">
+    <img alt="" src="https://img.shields.io/github/actions/workflow/status/worthant/spsc-lockfree-ring-queue/tsan.yml?branch=main&style=for-the-badge&label=TSan&labelColor=000000&logo=llvm&logoColor=white">
+  </a>
+  <a aria-label="AddressSanitizer + UBSan workflow" href="https://github.com/worthant/spsc-lockfree-ring-queue/actions/workflows/asan-ubsan.yml">
+    <img alt="" src="https://img.shields.io/github/actions/workflow/status/worthant/spsc-lockfree-ring-queue/asan-ubsan.yml?branch=main&style=for-the-badge&label=ASan%2BUBSan&labelColor=000000&logo=llvm&logoColor=white">
+  </a>
+  <a aria-label="C++17" href="https://en.cppreference.com/w/cpp/17">
+    <img alt="" src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=for-the-badge&labelColor=000000&logo=cplusplus&logoColor=white">
+  </a>
+  <a aria-label="CMake" href="https://cmake.org/">
+    <img alt="" src="https://img.shields.io/badge/CMake-%E2%89%A5_3.16-064F8C?style=for-the-badge&labelColor=000000&logo=cmake&logoColor=white">
+  </a>
+  <a aria-label="Catch2 v3" href="https://github.com/catchorg/Catch2">
+    <img alt="" src="https://img.shields.io/badge/Catch2-v3-22D3EE?style=for-the-badge&labelColor=000000&logoColor=white">
+  </a>
+</p>
 
-Lock-free **single-producer / single-consumer** циклическая очередь на C++17.  
+Lock-free **single-producer / single-consumer** циклическая очередь на C++17  
 Статическое хранилище, без примитивов синхронизации, ручное управление временем
 жизни объектов.
 
